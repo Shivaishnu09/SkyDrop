@@ -26,7 +26,7 @@ const Room = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const userData = await fetcher("http://localhost:3001/me");
+        const userData = await fetcher("/me");
         setUser(userData);
       } catch (error) {
         navigate("/auth");
@@ -40,7 +40,7 @@ const Room = () => {
 
     const fetchRoomData = async () => {
       try {
-        const data = await fetcher(`http://localhost:3001/rooms/${roomId}`);
+        const data = await fetcher(`/rooms/${roomId}`);
         setRoom(data);
         setParticipants(data.participants || []);
         setFiles(data.files || []);
@@ -99,7 +99,7 @@ const Room = () => {
     formData.append("user_id", user.id);
 
     try {
-      await fetcher(`http://localhost:3001/rooms/${roomId}/upload`, {
+      await fetcher(`/rooms/${roomId}/upload`, {
         method: "POST",
         body: formData,
       });
@@ -277,7 +277,7 @@ const Room = () => {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => window.location.href = `http://localhost:3001/download/${file.file_url.split('/').pop()}`}
+                        onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/download/${file.file_url.split('/').pop()}`}
                         className="hover:bg-primary hover:text-white transition-colors"
                       >
                         <Download className="w-4 h-4 mr-1" />

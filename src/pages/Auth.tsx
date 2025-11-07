@@ -24,7 +24,7 @@ const Auth = () => {
     // Check if user is already logged in
     const checkUser = async () => {
       try {
-        await fetcher("http://localhost:3001/me");
+        await fetcher("/me");
         navigate("/dashboard");
       } catch (error) {
         // Not logged in
@@ -37,7 +37,7 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    const url = mode === 'signup' ? 'http://localhost:3001/signup' : 'http://localhost:3001/login';
+    const url = mode === 'signup' ? '/signup' : '/login';
     const body = mode === 'signup' ? { email, password, username } : { email, password };
 
     try {
@@ -61,10 +61,14 @@ const Auth = () => {
         navigate("/dashboard");
       }
     } catch (error: any) {
+      console.error('Auth error:', error);
       toast({
         variant: "destructive",
-        title: "Error",
-        description: error.info?.message || "An error occurred",
+        title: mode === 'login' ? "Login failed" : "Sign up failed",
+        description: error.info?.message || 
+                    (error.status === 401 ? "Invalid email or password" : 
+                     error.status === 400 ? "Please check your input" :
+                     "An unexpected error occurred"),
       });
     } finally {
       setLoading(false);
@@ -108,6 +112,7 @@ const Auth = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              autoComplete="email"
             />
           </div>
 
@@ -121,6 +126,7 @@ const Auth = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
+              autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
             />
           </div>
 

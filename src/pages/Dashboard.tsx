@@ -19,7 +19,7 @@ const Dashboard = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const userData = await fetcher("http://localhost:3001/me");
+        const userData = await fetcher("/me");
         setUser(userData);
       } catch (error) {
         navigate("/auth");
@@ -36,7 +36,7 @@ const Dashboard = () => {
 
     setLoading(true);
     try {
-      const room = await fetcher("http://localhost:3001/rooms", {
+      const room = await fetcher("/rooms", {
         method: "POST",
         body: JSON.stringify({ host_id: user.id }),
       });
@@ -62,7 +62,7 @@ const Dashboard = () => {
 
     setLoading(true);
     try {
-      const room = await fetcher("http://localhost:3001/rooms/join", {
+      const room = await fetcher("/rooms/join", {
         method: "POST",
         body: JSON.stringify({ room_code: roomCode.toUpperCase(), room_password: roomPassword, user_id: user.id }),
       });
@@ -80,7 +80,7 @@ const Dashboard = () => {
 
   const handleLogout = async () => {
     try {
-      await fetcher("http://localhost:3001/logout", { method: "POST" });
+      await fetcher("/logout", { method: "POST" });
     } catch (error) {
       // Ignore errors on logout
     }
@@ -192,6 +192,7 @@ const Dashboard = () => {
                       value={roomPassword}
                       onChange={(e) => setRoomPassword(e.target.value)}
                       required
+                      autoComplete="current-password"
                     />
                   </div>
                   <Button
