@@ -11,16 +11,15 @@ const { MongoClient, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 3001;
 
-// ✅ MongoDB Atlas Connection (hardcoded for simplicity)
+// ✅ MongoDB Atlas Connection (hardcoded)
 const uri = "mongodb+srv://khudeshivam33_db_user:vpIIvOEfkLYk15Un@cluster0.jsvlcxm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
 const client = new MongoClient(uri);
 let db;
 
 async function connectDB() {
   try {
     await client.connect();
-    db = client.db('skydrop'); // Database name
+    db = client.db('skydrop');
     console.log('✅ Connected to MongoDB Atlas');
   } catch (err) {
     console.error('❌ MongoDB connection failed:', err);
@@ -29,7 +28,7 @@ async function connectDB() {
 }
 connectDB();
 
-// ✅ CORS setup (for Netlify frontend)
+// ✅ CORS setup
 const allowedOrigins = [
   'https://skydrop-flieshare.netlify.app',
   'http://localhost:5173'
@@ -38,7 +37,7 @@ const allowedOrigins = [
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) callback(null, true);
-    else callback(null, true); // allow all temporarily
+    else callback(null, true);
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
@@ -245,7 +244,7 @@ app.get('/download/:filename', (req, res) => {
   });
 });
 
-// 🧩 TEST — MongoDB Connection Checker
+// 🧩 Test DB Connection
 app.get('/testdb', async (req, res) => {
   try {
     const test = await db.collection('test').insertOne({ message: 'MongoDB connected', time: new Date() });
